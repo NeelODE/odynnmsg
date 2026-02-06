@@ -17,14 +17,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.1",
-<<<<<<< HEAD
     "typescript": "^5.2.2",
     "vite": "^5.1.4"
   }
 }
-=======
-    "vite": "^5.1.4",
-    "typescript": "^5.2.2"
-  }
-}
->>>>>>> 036f64750f099606a8312f78b51df790b836ba64
