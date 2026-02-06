@@ -1,0 +1,5 @@
+{
+  "name": "DirectChat",
+  "description": "A high-performance, WhatsApp-like direct messaging platform with real-time polling and explicit user discovery.",
+  "requestFramePermissions": []
+}
