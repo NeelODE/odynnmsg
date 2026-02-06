@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { db } from './db';
+=======
+import { sql } from '@vercel/postgres';
+>>>>>>> 036f64750f099606a8312f78b51df790b836ba64
 
 export default async function handler(req: any, res: any) {
   const { userId } = req.query;
@@ -8,8 +12,17 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+<<<<<<< HEAD
     // 1. Get Chat IDs for user
     const { rows: chatRows } = await db.sql`
+=======
+    // Fetch all chats where the user is a participant
+    // AND fetch the last message
+    // AND fetch the other participants details
+    
+    // 1. Get Chat IDs for user
+    const { rows: chatRows } = await sql`
+>>>>>>> 036f64750f099606a8312f78b51df790b836ba64
       SELECT c.id, c.updated_at
       FROM chats c
       JOIN chat_participants cp ON c.id = cp.chat_id
@@ -23,9 +36,16 @@ export default async function handler(req: any, res: any) {
     }
 
     // 2. Hydrate chats with participants and last message
+<<<<<<< HEAD
     const populatedChats = await Promise.all(chatRows.map(async (chat) => {
       // Get Participants
       const { rows: participants } = await db.sql`
+=======
+    // We do this concurrently for performance
+    const populatedChats = await Promise.all(chatRows.map(async (chat) => {
+      // Get Participants
+      const { rows: participants } = await sql`
+>>>>>>> 036f64750f099606a8312f78b51df790b836ba64
         SELECT u.id, u.username 
         FROM users u
         JOIN chat_participants cp ON u.id = cp.user_id
@@ -33,7 +53,11 @@ export default async function handler(req: any, res: any) {
       `;
 
       // Get Last Message
+<<<<<<< HEAD
       const { rows: messages } = await db.sql`
+=======
+      const { rows: messages } = await sql`
+>>>>>>> 036f64750f099606a8312f78b51df790b836ba64
         SELECT * FROM messages 
         WHERE chat_id = ${chat.id}
         ORDER BY timestamp DESC
@@ -49,7 +73,11 @@ export default async function handler(req: any, res: any) {
         id: chat.id,
         updatedAt: Number(chat.updated_at),
         participantIds: participants.map(p => p.id),
+<<<<<<< HEAD
         participants_data: participants,
+=======
+        participants_data: participants, // Helper for frontend
+>>>>>>> 036f64750f099606a8312f78b51df790b836ba64
         lastMessage
       };
     }));
