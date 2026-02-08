@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Chat, Message, PopulatedChat } from './types';
 import { mockBackend } from './services/mockBackend';
 import { useInterval } from './hooks/useInterval';
-import Button from './components/Button';
-import Input from './components/Input';
-import MessageBubble from './components/MessageBubble';
+import Button from './components/ui/Button';
+import Input from './components/ui/Input';
+import MessageBubble from './components/ui/MessageBubble';
 import { Search, LogOut, MessageSquare, Send, User as UserIcon } from 'lucide-react';
 
 // --- AUTH COMPONENT ---
