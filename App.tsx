@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Chat, Message, PopulatedChat } from './types';
 import { mockBackend } from './services/mockBackend';
 import { useInterval } from './hooks/useInterval';
+// Ensure we are importing from the new ui-elements folder to resolve build errors
 import PrimaryButton from './ui-elements/PrimaryButton';
 import FormInput from './ui-elements/FormInput';
 import ChatMessage from './ui-elements/ChatMessage';
