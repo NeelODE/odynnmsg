@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Chat, Message, PopulatedChat } from './types';
 import { mockBackend } from './services/mockBackend';
 import { useInterval } from './hooks/useInterval';
-import ActionBtn from './components/ActionBtn';
-import TextInp from './components/TextInp';
-import ChatMsg from './components/ChatMsg';
+import PrimaryButton from './ui-elements/PrimaryButton';
+import FormInput from './ui-elements/FormInput';
+import ChatMessage from './ui-elements/ChatMessage';
 import { Search, LogOut, MessageSquare, Send, User as UserIcon } from 'lucide-react';
 
 // --- AUTH COMPONENT ---
@@ -40,23 +40,23 @@ const AuthScreen: React.FC<{ onLogin: (user: User) => void }> = ({ onLogin }) =>
           <p className="text-gray-600">Enter your credentials to start messaging.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <TextInp 
+          <FormInput 
             label="Username" 
             value={username} 
             onChange={e => setUsername(e.target.value)}
             placeholder="e.g. alice"
             autoFocus
           />
-          <TextInp 
+          <FormInput 
             label="Password" 
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             placeholder="••••••••"
           />
-          <ActionBtn type="submit" className="w-full" isLoading={isLoading}>
+          <PrimaryButton type="submit" className="w-full" isLoading={isLoading}>
             Login / Register
-          </ActionBtn>
+          </PrimaryButton>
         </form>
         <p className="mt-4 text-xs text-center text-gray-400">
           Note: This is a demo. Accounts are created automatically if they don't exist.
@@ -457,7 +457,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
                    </div>
                  ) : (
                     messages.map((msg) => (
-                      <ChatMsg 
+                      <ChatMessage 
                         key={msg.id} 
                         message={msg} 
                         isOwn={msg.senderId === currentUser.id} 
