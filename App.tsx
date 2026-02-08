@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Chat, Message, PopulatedChat } from './types';
 import { mockBackend } from './services/mockBackend';
 import { useInterval } from './hooks/useInterval';
-import Button from './components/ui/Button';
-import Input from './components/ui/Input';
-import MessageBubble from './components/ui/MessageBubble';
+import ActionButton from './components/ui/ActionButton';
+import TextInput from './components/ui/TextInput';
+import ChatBubble from './components/ui/ChatBubble';
 import { Search, LogOut, MessageSquare, Send, User as UserIcon } from 'lucide-react';
 
 // --- AUTH COMPONENT ---
@@ -40,23 +40,23 @@ const AuthScreen: React.FC<{ onLogin: (user: User) => void }> = ({ onLogin }) =>
           <p className="text-gray-600">Enter your credentials to start messaging.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <Input 
+          <TextInput 
             label="Username" 
             value={username} 
             onChange={e => setUsername(e.target.value)}
             placeholder="e.g. alice"
             autoFocus
           />
-          <Input 
+          <TextInput 
             label="Password" 
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             placeholder="••••••••"
           />
-          <Button type="submit" className="w-full" isLoading={isLoading}>
+          <ActionButton type="submit" className="w-full" isLoading={isLoading}>
             Login / Register
-          </Button>
+          </ActionButton>
         </form>
         <p className="mt-4 text-xs text-center text-gray-400">
           Note: This is a demo. Accounts are created automatically if they don't exist.
@@ -175,8 +175,6 @@ export default function App() {
     // but for UI we might want to check if one exists to select it.
     // For simplicity: We will select an existing chat if found, 
     // or set a "pending" state.
-    // Actually, looking at the mockBackend, we need to send a message to create the ID.
-    // But we want to open the window first. 
     
     // Let's see if a chat already exists
     const existingChat = chats.find(c => c.otherUser.id === targetUser.id);
@@ -184,34 +182,6 @@ export default function App() {
       setActiveChatId(existingChat.id);
       setSearchQuery(''); // Clear search to show list
     } else {
-      // Allow sending a message to a new user.
-      // We can create a temporary "fake" chat object in state for the UI
-      // which becomes real once the first message is sent.
-      // However, to keep it robust, let's just use the ID we *will* use logic for.
-      // But wait, ID is UUID.
-      // Workaround: We will handle "first message" in the sendMessage function logic specially.
-      // VISUAL HACK: We can't really open a chat without an ID in this strict architecture
-      // unless we create the chat upfront.
-      // Let's create an empty chat via a backend helper if needed, 
-      // OR just simulate it. 
-      // The Spec says: "Chats are created automatically when the first message is sent".
-      // So the UI needs to support a "New Chat Mode".
-      // To keep it simple: We'll send a "Hello" immediately? No that's spammy.
-      
-      // Better approach: We send a 'system' start or just handle the "no chat ID" state.
-      // Let's do this: We'll just auto-create the chat entry on the backend with 0 messages
-      // if the user clicks a contact. This simplifies the UI logic massively.
-      // Since "Chats are created automatically when first message sent" is a rule, 
-      // let's violate it slightly purely for UI state management convenience (creating a shell chat)
-      // OR we implement a `draft` state.
-      
-      // Let's implement `draft` state logic.
-      // We will clear `activeChatId` but set `draftRecipient` state.
-      // But re-using the ChatWindow component is easier if we have an ID.
-      // Let's just create the chat shell on the backend. It's a "User Discovery" action.
-      // NOTE: For strict adherence, I'll send the first message logic when user types.
-      // But to select the user, I need to know who I am talking to.
-      
       // Let's use a temporary ID `temp_${targetUser.id}`
       // And handle that in sendMessage.
       setActiveChatId(`TEMP_${targetUser.id}`);
@@ -281,19 +251,8 @@ export default function App() {
   let activeRecipient: User | undefined;
   
   if (isTempChat) {
-     // If it's a temp chat, we need to find the user from search results (or just know the ID)
-     // Since we don't persist the user object in the ID, we rely on the fact 
-     // that we just clicked them. Ideally we store `activeDraftUser` in state.
-     // To fix this cleanly:
-     // When starting a temp chat, we should verify we have the user info.
-     // Let's assume for this specific flow we can look it up in search results or cache.
-     // We will store `activeChatUser` separately to handle this robustly.
+     // Logic handled by searching results if needed
   }
-  
-  // Actually, better pattern:
-  // When `startChat` is called, we set `activeChatUser` state.
-  // If `activeChatId` corresponds to `activeChatUser`, great.
-  // If `activeChatId` is null/temp, we use `activeChatUser`.
   
   return (
     <ChatLayout 
@@ -498,7 +457,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
                    </div>
                  ) : (
                     messages.map((msg) => (
-                      <MessageBubble 
+                      <ChatBubble 
                         key={msg.id} 
                         message={msg} 
                         isOwn={msg.senderId === currentUser.id} 
