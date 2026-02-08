@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { User, Chat, Message, PopulatedChat } from './types';
 import { mockBackend } from './services/mockBackend';
 import { useInterval } from './hooks/useInterval';
@@ -242,7 +243,12 @@ export default function App() {
   // -- RENDER --
 
   if (!currentUser) {
-    return <AuthScreen onLogin={handleLogin} />;
+    return (
+      <>
+        <Analytics />
+        <AuthScreen onLogin={handleLogin} />
+      </>
+    );
   }
 
   // Derived state for the active view
@@ -255,25 +261,28 @@ export default function App() {
   }
   
   return (
-    <ChatLayout 
-      currentUser={currentUser}
-      chats={chats}
-      activeChatId={activeChatId}
-      onSelectChat={(chatId) => setActiveChatId(chatId)}
-      onLogout={handleLogout}
-      searchQuery={searchQuery}
-      onSearch={handleSearch}
-      searchResults={searchResults}
-      onStartChat={startChat}
-      
-      // Right Panel Props
-      activeChatUser={activeChatObject?.otherUser || (activeChatId?.startsWith('TEMP_') ? searchResults.find(u => `TEMP_${u.id}` === activeChatId) : undefined)}
-      messages={messages}
-      messageText={newMessageText}
-      onMessageChange={setNewMessageText}
-      onSendMessage={handleSendMessage}
-      messagesEndRef={messagesEndRef}
-    />
+    <>
+      <Analytics />
+      <ChatLayout 
+        currentUser={currentUser}
+        chats={chats}
+        activeChatId={activeChatId}
+        onSelectChat={(chatId) => setActiveChatId(chatId)}
+        onLogout={handleLogout}
+        searchQuery={searchQuery}
+        onSearch={handleSearch}
+        searchResults={searchResults}
+        onStartChat={startChat}
+        
+        // Right Panel Props
+        activeChatUser={activeChatObject?.otherUser || (activeChatId?.startsWith('TEMP_') ? searchResults.find(u => `TEMP_${u.id}` === activeChatId) : undefined)}
+        messages={messages}
+        messageText={newMessageText}
+        onMessageChange={setNewMessageText}
+        onSendMessage={handleSendMessage}
+        messagesEndRef={messagesEndRef}
+      />
+    </>
   );
 }
 
